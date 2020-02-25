@@ -1,0 +1,13 @@
+    <h1>Example App: {{title}}</h1>
+    <form action="/launch_lti" method="post" id="form1">
+<label for="fname">First name:</label>
+<input type="text" id="fname" name="fname"><br><br>
+<label for="lname">Last name:</label>
+<input type="text" id="lname" name="lname">
+<input type="hidden" name="lti_message_type" value="basic-lti-launch-request">
+<input type="hidden" name="lti_version" value="LTI-1p0">
+<input type="hidden" name="resource_link_id" value="88391-e1919-bb3456">
+<input type="hidden" name="oauth_consumer_key" value="demo">
+</form>
+<button type="submit" form="form1" value="Submit">Submit</button>
+ <p>Please go back <a href="http://localhost:9011/home"> client app</a>.</p>
