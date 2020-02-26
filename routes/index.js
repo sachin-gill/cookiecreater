@@ -16,7 +16,7 @@ router.post('/set-cookie', function(req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
   let randomNumber=Math.random().toString();
   randomNumber=randomNumber.substring(2,randomNumber.length);
-  res.cookie('mycokkieName',randomNumber, { maxAge: 900000, httpOnly: true })
+  res.cookie('mycokkieName',randomNumber, { domain: 'https://cookie-validator.herokuapp.com/', path: '/get-cookie', maxAge: 900000, httpOnly: true })
   res.send('setting cookies.!!');
 });
 
