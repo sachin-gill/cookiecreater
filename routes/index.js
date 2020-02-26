@@ -19,7 +19,7 @@ router.post('/set-cookie', function(req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
   let randomNumber=Math.random().toString();
   randomNumber=randomNumber.substring(2,randomNumber.length);
-  res.cookie('mycokkieName',randomNumber, { domain: '.cokkie-validator.herokuapp.com', path: '/', httpOnly: true, secure: true, sameSite: 'none' })
+  res.cookie('mycokkieName',randomNumber, { domain: '.cokkie-validator.herokuapp.com', path: '/', httpOnly: true, secure: true, sameSite: false })
   res.send('setting cookies.!!');
 });
 
