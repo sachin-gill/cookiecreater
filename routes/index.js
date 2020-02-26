@@ -31,7 +31,7 @@ router.get('/get-cookie', function(req, res, next) {
   console.log(req.get('Origin'));
   console.log(req.headers.origin);
   res.header('Access-Control-Allow-Methods', 'GET,POST');
-  res.header("Access-Control-Allow-Origin", req.headers.host ||req.get('origin') ||req.get('Origin'),req.headers.host+'/'); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", req.headers.origin ||req.get('origin') ||req.get('Origin')); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Content-Type, Accept");
   res.header('Access-Control-Allow-Credentials', true);
   response = `Got the cookkie ${req.cookies['mycokkieName']}`;
