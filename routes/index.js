@@ -10,6 +10,10 @@ router.get('/redirect', function(req, res, next) {
 /* GET home page. */
 router.post('/set-cookie', function(req, res, next) {
   console.log("post call invoked.!!");
+  res.header('Access-Control-Allow-Methods', 'GET,POST');
+  res.header("Access-Control-Allow-Origin", '*'); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Content-Type, Accept");
+  res.header('Access-Control-Allow-Credentials', true);
   let randomNumber=Math.random().toString();
   randomNumber=randomNumber.substring(2,randomNumber.length);
   res.cookie('mycokkieName',randomNumber, { maxAge: 900000, httpOnly: true })
@@ -20,6 +24,10 @@ router.post('/set-cookie', function(req, res, next) {
 router.get('/get-cookie', function(req, res, next) {
   console.log("get call invoked.!!");
   console.log(req.cookies['mycokkieName']);
+  res.header('Access-Control-Allow-Methods', 'GET,POST');
+  res.header("Access-Control-Allow-Origin", '*'); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Content-Type, Accept");
+  res.header('Access-Control-Allow-Credentials', true);
   response = `Got the cookkie ${req.cookies['mycokkieName']}`;
   res.send(response);
 });
