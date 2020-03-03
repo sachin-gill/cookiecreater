@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var aws4  = require('aws4')
+const request = require('request-promise-native');
+
+
 
 /* GET home page. */
-router.get('/redirect', function(req, res, next) {  
+router.get('/redirect', function(req, res, next) {
   console.log("redirect call invoked.!!", req.url);
   res.redirect(req.url)
 });1
@@ -42,6 +46,41 @@ router.get('/get-cookie', function(req, res, next) {
 /* GET home page. */
 router.get('/home', function(req, res, next) {
   res.render('home', { title: 'Client App' });
+});
+
+router.get('/lti-launch', function(req, res, next) {
+  res.render('lti', { title: 'Client App' });
+});
+
+
+router.post('/launch-lti', async (req, res) => {
+
+  const  options = {
+    path: '/lti-launch',
+    uri: 'https://55zdx6j9gf.execute-api.us-east-1.amazonaws.com/test',
+    method: "POST",
+    body: "Hello",
+    service: 'execute-api',
+    region: 'us-east-1',
+    json: true,
+    host: '55zdx6j9gf.execute-api.us-east-1.amazonaws.com', 
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+    }
+  };
+  aws4.sign(options, {
+    accessKeyId: "..",
+    secretAccessKey: ".."
+  });
+  console.log("requestOptions==", options);
+
+  //Call tp aws api gateway and reciev response
+  //show response on html page.
+  // const uri = `https://55zdx6j9gf.execute-api.us-east-1.amazonaws.com/test/lti-launch`
+
+  const ltiResponse = await request(options);
+  console.log(ltiResponse);
+  res.render('lti-res', { title: 'Client App' });
 });
 
 
