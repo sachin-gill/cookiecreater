@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var aws4  = require('aws4')
 const request = require('request-promise-native');
+var crypto = require('crypto-js');
+require('dotenv').config()
 
 
 
@@ -56,27 +58,22 @@ router.get('/lti-launch', function(req, res, next) {
 router.post('/launch-lti', async (req, res) => {
 
   const  options = {
-    path: '/lti-launch',
-    uri: 'https://55zdx6j9gf.execute-api.us-east-1.amazonaws.com/test',
-    method: "POST",
-    body: "Hello",
+    url: 'https://55zdx6j9gf.execute-api.us-east-1.amazonaws.com/test/lti-launch',
+    path: '/test/lti-launch',
+    method: 'POST',
+    body: '',
     service: 'execute-api',
     region: 'us-east-1',
-    json: true,
-    host: '55zdx6j9gf.execute-api.us-east-1.amazonaws.com', 
+    host: '55zdx6j9gf.execute-api.us-east-1.amazonaws.com',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+      'Content-Type': 'application/x-www-form-urlencoded;',
     }
   };
   aws4.sign(options, {
-    accessKeyId: "..",
-    secretAccessKey: ".."
+    accessKeyId: process.env.ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_KEY
   });
-  console.log("requestOptions==", options);
 
-  //Call tp aws api gateway and reciev response
-  //show response on html page.
-  // const uri = `https://55zdx6j9gf.execute-api.us-east-1.amazonaws.com/test/lti-launch`
 
   const ltiResponse = await request(options);
   console.log(ltiResponse);
