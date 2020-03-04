@@ -76,8 +76,7 @@ router.post('/launch-lti', async (req, res) => {
 
 
   const ltiResponse = await request(options);
-  console.log(ltiResponse);
-  res.render('lti-res', { title: 'Client App' });
+  res.render('lti-res', { response: ltiResponse });
 });
 
 
