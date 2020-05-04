@@ -3,6 +3,8 @@ var router = express.Router();
 var aws4  = require('aws4')
 const request = require('request-promise-native');
 var crypto = require('crypto-js');
+var permitParams = require('params');
+
 require('dotenv').config()
 
 
@@ -56,35 +58,25 @@ router.get('/lti-launch', function(req, res, next) {
 
 
 router.post('/launch-lti', async (req, res) => {
-    
-  //   let bodyparams = {
-  //     lti_params:{
-  //         lti_message_type: req.lti_message_type,
-  //         lti_version: req.lti_version,
-  //         oauth_consumer_key: req.oauth_consumer_key,
-  //         oauth_signature: req.oauth_signature,
-  //         oauth_nonce: req.oauth_nonce,
-  //         oauth_signature_method: req.oauth_signature_method,
-  //         oauth_timestamp: req.oauth_timestamp,
-  //         oauth_version: req.oauth_version,
-  //         resource_link_id: req.resource_link_id,
-  //         roles: req.roles,
-  //         user_id: req.user_id
-  //     },
-  //     reader_params:{
-  //         launch_url: document.getElementById('launch_url').value,
-  //         reader_resource_link_id: document.getElementById('reader_resource_link_id').value
-  //     }
-  // };
+    let params = req.body;
+    let bodyparams = {
+      reader_params:{
+          launch_url: params['launch_presentation_return_url'],
+          reader_resource_link_id: params['resource_link_id']
+      }
+  };
 
-  console.log("req ===========");
-  console.log(req);
-
+  bodyparams['lti_params'] = permitParams(params).only( 'oauth_consumer_key','oauth_signature_method',
+  'oauth_timestamp','oauth_nonce','oauth_version','context_id','context_label','context_title','custom_canvas_enrollment_state',
+  'ext_roles','launch_presentation_document_target', 'launch_presentation_locale','lis_person_contact_email_primary','lti_message_type',
+  'lti_version','oauth_callback','product_environment','resource_link_title','roles','tool_consumer_info_product_family_code','tool_consumer_info_version',
+  'tool_consumer_instance_contact_email', 'tool_consumer_instance_guid','tool_consumer_instance_name','user_id','oauth_signature');
+ 
   const  options = {
     url: 'https://oehvl9xcv4.execute-api.us-east-1.amazonaws.com/dev/lti/authenticate',
-    path: '/lti/authenticate',
+    path: '/dev/lti/authenticate',
     method: 'POST',
-    body: '',
+    body: JSON.stringify(bodyparams),
     service: 'execute-api',
     region: 'us-east-1',
     host: 'oehvl9xcv4.execute-api.us-east-1.amazonaws.com',
@@ -92,6 +84,7 @@ router.post('/launch-lti', async (req, res) => {
       'Content-Type': 'application/x-www-form-urlencoded;',
     }
   };
+
   aws4.sign(options, {
     accessKeyId: process.env.ACCESS_KEY,
     secretAccessKey: process.env.SECRET_KEY
@@ -99,6 +92,7 @@ router.post('/launch-lti', async (req, res) => {
 
 
   const ltiResponse = await request(options);
+  console.log(ltiResponse);
   res.render('lti-res', { response: ltiResponse });
 });
 

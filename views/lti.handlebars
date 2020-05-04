@@ -1,3 +1,273 @@
- <form action="/launch-lti" method="post" id="form1">
-   <button type="submit" form="form1" value="Submit">Launch Lti</button>
-</form
+
+<html>
+  <style>
+    label {
+      font-weight: 900;
+    }
+    .c-button {
+      padding: 8px;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+  </style>
+  <body>
+    <div style="text-align: center;">
+      <h1>Test App: LTI Post Call</h1>
+      <label for="call_url">Request Post Call:</label>
+      <input
+        type="text"
+        id="call_url"
+        name="call_url"
+        value="Reader Url"
+        style="width: 500px;"
+      /><br /><br />
+    </div>
+
+    <form id="requestForm">
+      <div
+        style="display: flex; flex-flow: row; justify-content: space-evenly;"
+      >
+        <div style="margin: 12px;">
+          <h2>Lti params</h2>
+          <label for="lti_message_type">Lti Message Type:</label>
+          <input
+            id="lti_message_type"
+            name="lti_message_type"
+            value="basic-lti-launch-request"
+          /><br /><br />
+          <label for="lti_version">Lti Version:</label>
+          <input
+            id="lti_version"
+            name="lti_version"
+            value="LTI-1p0"
+          /><br /><br />
+          <label for="roles">Roles:</label>
+          <input
+            type="text"
+            id="roles"
+            name="roles"
+            value="Learner"
+          /><br /><br />
+          <label for="user_id">User Id:</label>
+          <input id="user_id" name="user_id" value="292832126" /><br /><br />
+          <label for="resource_link_id">Resource Link Id:</label>
+          <input
+            id="resource_link_id"
+            name="resource_link_id"
+            value="88391-e1919-bb3456"
+          /><br /><br />
+          <label for="oauth_version">Oauth Version:</label>
+          <input
+            id="oauth_version"
+            name="oauth_version"
+            value="1.0"
+          /><br /><br />
+          <label for="oauth_consumer_key">Oauth Consumer Key:*</label>
+          <input
+            type="text"
+            id="oauth_consumer_key"
+            name="oauth_consumer_key"
+            value="demo"
+          />
+          <p>
+            *note: this must me a valid value mapped with secret key in database
+          </p>
+        </div>
+        <div style="margin: 12px;">
+          <h2>Lti Params Need to be Calculated</h2>
+          <label for="oauth_signature_method">Oauth Signature Method:</label>
+          <input
+            id="oauth_signature_method"
+            name="oauth_signature_method"
+            value="HMAC-SHA1"
+          /><br /><br />
+          <label for="secret">Secret:</label>
+          <input
+            type="text"
+            id="secret"
+            name="secret"
+            value="xzc342AScx"
+          /><br /><br />
+          <label for="oauth_nonce">Oauth Nonce:</label>
+          <input id="oauth_nonce" name="oauth_nonce" /><br /><br />
+          <label for="oauth_timestamp">Oauth Timestamp:</label>
+          <input
+            type="number"
+            id="oauth_timestamp"
+            name="oauth_timestamp"
+          /><br /><br />
+          <label for="oauth_signature">Oauth Signature:</label>
+          <input id="oauth_signature" name="oauth_signature" /><br /><br />
+          <p>
+            click on the button below to calculate signature, timestamp and
+            nonce
+          </p>
+          <button
+            class="c-button"
+            type="button"
+            value="button"
+            onclick="calculateparams()"
+          >
+            Calculate params on click
+          </button>
+        </div>
+      </div>
+    </form>
+    <div style="display: flex; justify-content: center;">
+      <button class="c-button" type="submit" onclick="methsubmit()">
+        Submit
+      </button>
+    </div>
+    <p id="responseContainer"></p>
+  </body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/hmac-sha1.min.js"></script>
+  <script>
+    function calculateparams() {
+      console.log("ltilaunch");
+      const nonce = generatenonce();
+      const timestamp = generatetimestamp();
+      document.getElementById("oauth_timestamp").value = timestamp;
+      document.getElementById("oauth_nonce").value = nonce;
+      let secret = document.getElementById("secret").value;
+      const signature = generatesignature(secret);
+      document.getElementById("oauth_signature").value = signature;
+    }
+
+    function getparams() {
+      let bodyparams = {
+        oauth_consumer_key: 'demo',
+        oauth_signature_method: 'HMAC-SHA1',
+        oauth_timestamp: '1588359650',
+        oauth_nonce: 'YTi2btbtZW3FUpv3Rn7NL85mmBbRs1F5aOavwKf88',
+        oauth_version: '1.0',
+        context_id: '295fe4f8b98aed7d17ce91c3ab5ad737d8483ab4',
+        context_label: 'DLS',
+        context_title: 'DLS Reader Test',
+        custom_canvas_enrollment_state: 'active',
+        ext_roles: 'urn:lti:instrole:ims/lis/Instructor,urn:lti:role:ims/lis/Instructor,urn:lti:sysrole:ims/lis/User',
+        launch_presentation_document_target: 'iframe',
+        launch_presentation_locale: 'en',
+        launch_presentation_return_url: 'https://canvas.instructure.com/courses/2028946/modules',
+        lis_person_contact_email_primary: 'sachin.gill@comprotechnologies.com',
+        lti_message_type: 'basic-lti-launch-request',
+        lti_version: 'LTI-1p0',
+        oauth_callback: 'about:blank',
+        product_environment: 'devpub4-qa',
+        resource_link_id: '498d5740c02117c4ae5f10b5715cfa66f92df1fb',
+        resource_link_title: 'DLs Reader App for LTI  in New tab',
+        roles: 'Instructor',
+        tool_consumer_info_product_family_code: 'canvas',
+        tool_consumer_info_version: 'cloud',
+        tool_consumer_instance_contact_email: 'notifications@instructure.com',
+        tool_consumer_instance_guid: '07adb3e60637ff02d9ea11c7c74f1ca921699bd7.canvas.instructure.com',
+        tool_consumer_instance_name: 'Free For Teacher',
+        user_id: '00efbd93327ca2d3b9d4013340acf9671627e202',
+        oauth_signature: '7orJ2i/CiCcMp0Tfdtk/cydaw+s='
+      };
+      return bodyparams;
+    }
+    async function methsubmit() {
+      let bodyparams = getparams();
+      let formData = JSON.stringify(bodyparams);
+
+      fetch("/launch-lti", {
+        method: "post",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        body: formData,
+        mode: "cors",
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          document.getElementById("responseContainer").innerHTML =
+            "response: " + data.message;
+          console.log("response data is : ", data);
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+
+    function generatenonce() {
+      return Math.random()
+        .toString(36)
+        .replace(/[^a-z]/, "")
+        .substr(2);
+    }
+
+    function generatetimestamp() {
+      return Math.floor(new Date().getTime() / 1000);
+    }
+
+    function generatesignature(consumer_secret) {
+      let bodyparams = getparams();
+      console.log(bodyparams);
+      let hitUrl = "/launch-lti"
+      let method = "post";
+      var toreturn = build_signature_raw(
+        hitUrl,
+        method,
+        bodyparams,
+        consumer_secret
+      );
+      console.log(toreturn);
+      return toreturn;
+    }
+
+    function build_signature_raw(req_url, method, params, consumer_secret) {
+      var sig;
+      sig = [
+        method.toUpperCase(),
+        special_encode(req_url),
+        _clean_request_body(params),
+      ];
+      return sign_string(sig.join("&"), consumer_secret);
+    }
+
+    function special_encode(string) {
+      return encodeURIComponent(string)
+        .replace(/[!'()]/g, escape)
+        .replace(/\*/g, "%2A");
+    }
+
+    function _clean_request_body(body) {
+      var self = this;
+      var cleanParams, encodeParam, out;
+      out = [];
+      encodeParam = function (key, val) {
+        return key + "=" + self.special_encode(val);
+      };
+      cleanParams = function (params) {
+        var i, key, len, val, vals;
+        if (typeof params !== "object") {
+          return;
+        }
+        for (key in params) {
+          vals = params[key];
+          if (key === "oauth_signature") {
+            continue;
+          }
+          if (Array.isArray(vals) === true) {
+            for (i = 0, len = vals.length; i < len; i++) {
+              val = vals[i];
+              out.push(encodeParam(key, val));
+            }
+          } else {
+            out.push(encodeParam(key, vals));
+          }
+        }
+      };
+      cleanParams(body);
+      return special_encode(out.sort().join("&"));
+    }
+
+    function sign_string(str, key) {
+      key = key + "&";
+      return CryptoJS.HmacSHA1(str, key).toString(CryptoJS.enc.Base64);
+    }
+  </script>
+</html>
