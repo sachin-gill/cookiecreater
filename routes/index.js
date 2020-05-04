@@ -56,15 +56,38 @@ router.get('/lti-launch', function(req, res, next) {
 
 
 router.post('/launch-lti', async (req, res) => {
+    
+  //   let bodyparams = {
+  //     lti_params:{
+  //         lti_message_type: req.lti_message_type,
+  //         lti_version: req.lti_version,
+  //         oauth_consumer_key: req.oauth_consumer_key,
+  //         oauth_signature: req.oauth_signature,
+  //         oauth_nonce: req.oauth_nonce,
+  //         oauth_signature_method: req.oauth_signature_method,
+  //         oauth_timestamp: req.oauth_timestamp,
+  //         oauth_version: req.oauth_version,
+  //         resource_link_id: req.resource_link_id,
+  //         roles: req.roles,
+  //         user_id: req.user_id
+  //     },
+  //     reader_params:{
+  //         launch_url: document.getElementById('launch_url').value,
+  //         reader_resource_link_id: document.getElementById('reader_resource_link_id').value
+  //     }
+  // };
+
+  console.log("req ===========");
+  console.log(req);
 
   const  options = {
-    url: 'https://55zdx6j9gf.execute-api.us-east-1.amazonaws.com/test/lti-launch',
-    path: '/test/lti-launch',
+    url: 'https://oehvl9xcv4.execute-api.us-east-1.amazonaws.com/dev/lti/authenticate',
+    path: '/lti/authenticate',
     method: 'POST',
     body: '',
     service: 'execute-api',
     region: 'us-east-1',
-    host: '55zdx6j9gf.execute-api.us-east-1.amazonaws.com',
+    host: 'oehvl9xcv4.execute-api.us-east-1.amazonaws.com',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;',
     }
