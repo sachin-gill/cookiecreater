@@ -9,20 +9,44 @@
       color: #333;
       background-color: #f8f8f8;
     }
+    #responseContainer{
+      color: red;
+      text-align: center;
+    }
   </style>
   <body>
     <div style="text-align: center;">
       <h1>Test App: LTI Post Call</h1>
-      <label for="call_url">Request Post Call:</label>
+      <h3>Api gateway parameters</h3>
+      <label for="api_url">URL:</label>
       <input
         type="text"
-        id="call_url"
-        name="call_url"
-        value="Reader Url"
+        id="api_url"
+        name="api_url"
+        value=""
         style="width: 500px;"
-      /><br /><br />
+      /><br>
+      <br>
+      <label for="api_path">Path:</label>
+      <input
+        type="text"
+        id="api_path"
+        name="api_path"
+        value=""
+        style="width: 500px;"
+      /><br>
+      <br>
+      <label for="api_host">Host:</label>
+      <input
+        type="text"
+        id="api_host"
+        name="api_host"
+        value=""
+        style="width: 500px;"
+      /><br>
+      <br>
     </div>
-
+    <p id="responseContainer"></p>
     <form id="requestForm">
       <div
         style="display: flex; flex-flow: row; justify-content: space-evenly;"
@@ -118,7 +142,7 @@
         Submit
       </button>
     </div>
-    <p id="responseContainer"></p>
+    
   </body>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
@@ -164,7 +188,11 @@
         tool_consumer_instance_guid: '07adb3e60637ff02d9ea11c7c74f1ca921699bd7.canvas.instructure.com',
         tool_consumer_instance_name: 'Free For Teacher',
         user_id: '00efbd93327ca2d3b9d4013340acf9671627e202',
-        oauth_signature: '7orJ2i/CiCcMp0Tfdtk/cydaw+s='
+        oauth_signature: '7orJ2i/CiCcMp0Tfdtk/cydaw+s=',
+        api_url: document.getElementById("api_url").value,
+        api_path: document.getElementById("api_path").value,
+        api_host: document.getElementById("api_host").value,
+        api_region: document.getElementById("api_region").value
       };
       return bodyparams;
     }
@@ -189,7 +217,11 @@
             "response: " + data.message;
           console.log("response data is : ", data);
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => 
+        {
+          document.getElementById("responseContainer").innerHTML =
+            "error: " + error;
+        });
     }
 
     function generatenonce() {

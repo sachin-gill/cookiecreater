@@ -59,6 +59,11 @@ router.get('/lti-launch', function(req, res, next) {
 
 router.post('/launch-lti', async (req, res) => {
     let params = req.body;
+    let api_url = params['api_url']
+    let api_path = params['api_path']
+    let api_host = params['api_host']
+    let api_region = params['api_region']
+
     let bodyparams = {
       reader_params:{
           launch_url: params['launch_presentation_return_url'],
@@ -73,13 +78,12 @@ router.post('/launch-lti', async (req, res) => {
   'tool_consumer_instance_contact_email', 'tool_consumer_instance_guid','tool_consumer_instance_name','user_id','oauth_signature');
  
   const  options = {
-    url: 'https://oehvl9xcv4.execute-api.us-east-1.amazonaws.com/dev/lti/authenticate',
-    path: '/dev/lti/authenticate',
+    url: api_url,
+    path: api_path,
     method: 'POST',
     body: JSON.stringify(bodyparams),
     service: 'execute-api',
-    region: 'us-east-1',
-    host: 'oehvl9xcv4.execute-api.us-east-1.amazonaws.com',
+    host: api_host,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;',
     }
@@ -90,10 +94,21 @@ router.post('/launch-lti', async (req, res) => {
     secretAccessKey: process.env.SECRET_KEY
   });
 
-
-  const ltiResponse = await request(options);
-  console.log(ltiResponse);
-  res.render('lti-res', { response: ltiResponse });
+  try {
+    const ltiResponse = await request(options);
+    res.render('lti-res', { response: ltiResponse });
+  } catch(e) {
+    if(e.name == 'RequestError') {
+      return res.status(400).send({
+        message: e.message 
+     });
+    } else {
+      return res.status(e.statusCode).send({
+        message: e.error ? JSON.parse(e.error).message : e
+     });
+    }
+  }
+  
 });
 
 
