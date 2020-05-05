@@ -148,14 +148,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/hmac-sha1.min.js"></script>
   <script>
+    let nonce, signature, timestamp;
     function calculateparams() {
       console.log("ltilaunch");
-      const nonce = generatenonce();
-      const timestamp = generatetimestamp();
+      nonce = generatenonce();
+      timestamp = generatetimestamp();
       document.getElementById("oauth_timestamp").value = timestamp;
       document.getElementById("oauth_nonce").value = nonce;
       let secret = document.getElementById("secret").value;
-      const signature = generatesignature(secret);
+      signature = generatesignature(secret);
       document.getElementById("oauth_signature").value = signature;
     }
 
@@ -163,8 +164,8 @@
       let bodyparams = {
         oauth_consumer_key: 'demo',
         oauth_signature_method: 'HMAC-SHA1',
-        oauth_timestamp: '1588359650',
-        oauth_nonce: 'YTi2btbtZW3FUpv3Rn7NL85mmBbRs1F5aOavwKf88',
+        oauth_timestamp: timestamp,
+        oauth_nonce: nonce,
         oauth_version: '1.0',
         context_id: '295fe4f8b98aed7d17ce91c3ab5ad737d8483ab4',
         context_label: 'DLS',
@@ -188,7 +189,7 @@
         tool_consumer_instance_guid: '07adb3e60637ff02d9ea11c7c74f1ca921699bd7.canvas.instructure.com',
         tool_consumer_instance_name: 'Free For Teacher',
         user_id: '00efbd93327ca2d3b9d4013340acf9671627e202',
-        oauth_signature: '7orJ2i/CiCcMp0Tfdtk/cydaw+s=',
+        oauth_signature: signature,
         api_url: document.getElementById("api_url").value,
         api_path: document.getElementById("api_path").value,
         api_host: document.getElementById("api_host").value,
