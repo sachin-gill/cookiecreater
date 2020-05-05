@@ -88,8 +88,6 @@ router.post('/launch-lti', async (req, res) => {
     }
   };
 
-  console.log(options);
-
   aws4.sign(options, {
     accessKeyId: process.env.ACCESS_KEY,
     secretAccessKey: process.env.SECRET_KEY

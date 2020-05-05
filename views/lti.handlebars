@@ -162,11 +162,11 @@
 
     function getparams() {
       let bodyparams = {
-        oauth_consumer_key: 'demo',
-        oauth_signature_method: 'HMAC-SHA1',
+        oauth_consumer_key: document.getElementById('oauth_consumer_key').value,
+        oauth_signature_method: document.getElementById('oauth_signature_method').value,
         oauth_timestamp: timestamp,
         oauth_nonce: nonce,
-        oauth_version: '1.0',
+        oauth_version: document.getElementById('oauth_version').value,
         context_id: '295fe4f8b98aed7d17ce91c3ab5ad737d8483ab4',
         context_label: 'DLS',
         context_title: 'DLS Reader Test',
@@ -176,8 +176,8 @@
         launch_presentation_locale: 'en',
         launch_presentation_return_url: 'https://canvas.instructure.com/courses/2028946/modules',
         lis_person_contact_email_primary: 'sachin.gill@comprotechnologies.com',
-        lti_message_type: 'basic-lti-launch-request',
-        lti_version: 'LTI-1p0',
+        lti_message_type: document.getElementById('lti_message_type').value,
+        lti_version: document.getElementById('lti_version').value,
         oauth_callback: 'about:blank',
         product_environment: 'devpub4-qa',
         resource_link_id: '498d5740c02117c4ae5f10b5715cfa66f92df1fb',
