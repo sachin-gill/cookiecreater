@@ -69,7 +69,7 @@ router.post('/launch-lti', async (req, res) => {
   bodyparams['lti_params'] = permitParams(params).only( 'oauth_consumer_key','oauth_signature_method',
   'oauth_timestamp','oauth_nonce','oauth_version','context_id','context_label','context_title','custom_canvas_enrollment_state',
   'ext_roles','launch_presentation_document_target', 'launch_presentation_locale','lis_person_contact_email_primary','lti_message_type',
-  'lti_version','oauth_callback','product_environment','resource_link_title','roles','tool_consumer_info_product_family_code','tool_consumer_info_version',
+  'lti_version','oauth_callback','product_environment','resource_link_id', 'resource_link_title','roles','tool_consumer_info_product_family_code','tool_consumer_info_version',
   'tool_consumer_instance_contact_email', 'tool_consumer_instance_guid','tool_consumer_instance_name','user_id','oauth_signature');
  
   const  options = {
