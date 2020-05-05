@@ -62,7 +62,6 @@ router.post('/launch-lti', async (req, res) => {
     let api_url = params['api_url']
     let api_path = params['api_path']
     let api_host = params['api_host']
-    let api_region = params['api_region']
 
     let bodyparams = {
       reader_params:{
