@@ -235,88 +235,27 @@
       return Math.floor(new Date().getTime() / 1000);
     }
 
-
-    function getsigparams() {
-      let bodyparams = {
-        oauth_consumer_key: document.getElementById('oauth_consumer_key').value,
-        oauth_signature_method: document.getElementById('oauth_signature_method').value,
-        oauth_timestamp: timestamp,
-        oauth_nonce: nonce,
-        oauth_version: document.getElementById('oauth_version').value,
-        context_id: '295fe4f8b98aed7d17ce91c3ab5ad737d8483ab4',
-        context_label: 'DLS',
-        context_title: 'DLS Reader Test',
-        custom_canvas_enrollment_state: 'active',
-        ext_roles: 'urn:lti:instrole:ims/lis/Instructor,urn:lti:role:ims/lis/Instructor,urn:lti:sysrole:ims/lis/User',
-        launch_presentation_document_target: 'iframe',
-        launch_presentation_locale: 'en',
-        lis_person_contact_email_primary: 'sachin.gill@comprotechnologies.com',
-        lti_message_type: document.getElementById('lti_message_type').value,
-        lti_version: document.getElementById('lti_version').value,
-        oauth_callback: 'about:blank',
-        product_environment: 'devpub4-qa',
-        resource_link_id: '498d5740c02117c4ae5f10b5715cfa66f92df1fb',
-        resource_link_title: 'DLs Reader App for LTI  in New tab',
-        roles: 'Instructor',
-        tool_consumer_info_product_family_code: 'canvas',
-        tool_consumer_info_version: 'cloud',
-        tool_consumer_instance_contact_email: 'notifications@instructure.com',
-        tool_consumer_instance_guid: '07adb3e60637ff02d9ea11c7c74f1ca921699bd7.canvas.instructure.com',
-        tool_consumer_instance_name: 'Free For Teacher',
-        user_id: '00efbd93327ca2d3b9d4013340acf9671627e202',
-      };
-      return bodyparams;
-    }
-
-    function parseURL(url) {
-	
-        var parser = document.createElement('a'),
-            searchObject = {},
-            queries, split, i;
-        // Let the browser do the work
-        parser.href = url;
-        // Convert query string to object
-        queries = parser.search.replace(/^\?/, '').split('&');
-        for( i = 0; i < queries.length; i++ ) {
-            split = queries[i].split('=');
-            searchObject[split[0]] = split[1];
-        }
-        return {
-            protocol: parser.protocol,
-            host: parser.host,
-            hostname: parser.hostname,
-            port: parser.port,
-            pathname: parser.pathname,
-            search: parser.search,
-            searchObject: searchObject,
-            hash: parser.hash
-        };
-    }
-
     function generatesignature(consumer_secret) {
-      let bodyparams = getsigparams();
+      let bodyparams = getparams();
       console.log(bodyparams);
-      let originalUrl = "https://canvas.instructure.com/courses/2028946/modules"
+      let hitUrl = "/launch-lti"
       let method = "post";
-      let parsedUrl = parseURL(originalUrl);
-      let hitUrl = parsedUrl.protocol + '//' + parsedUrl.host + parsedUrl.pathname;
       var toreturn = build_signature_raw(
         hitUrl,
         method,
         bodyparams,
-        consumer_secret,
-        parsedUrl
+        consumer_secret
       );
       console.log(toreturn);
       return toreturn;
     }
 
-    function build_signature_raw(req_url, method, params, consumer_secret, parsedUrl) {
+    function build_signature_raw(req_url, method, params, consumer_secret) {
       var sig;
       sig = [
         method.toUpperCase(),
         special_encode(req_url),
-        _clean_request_body(params, parsedUrl.searchObject),
+        _clean_request_body(params),
       ];
       return sign_string(sig.join("&"), consumer_secret);
     }
@@ -327,7 +266,7 @@
         .replace(/\*/g, "%2A");
     }
 
-    function _clean_request_body(body, query) {
+    function _clean_request_body(body) {
       var self = this;
       var cleanParams, encodeParam, out;
       out = [];
@@ -355,12 +294,6 @@
         }
       };
       cleanParams(body);
-      
-    //Since canvas includes query parameters in the body we can emit query string
-    if(body.tool_consumer_info_product_family_code != "canvas") {
-      cleanParams(query);
-    } 
-    
       return special_encode(out.sort().join("&"));
     }
 
