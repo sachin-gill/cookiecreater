@@ -59,16 +59,22 @@ router.get('/lti-launch', function(req, res, next) {
 
 router.post('/launch-lti', async (req, res) => {
     let params = req.body;
-    let api_url = params['api_url']
-    let api_path = params['api_path']
-    let api_host = params['api_host']
+    let api_url = process.env['api_url'];
+    let api_path = process.env['api_path'];
+    let api_host = process.env['api_host'];
 
     let bodyparams = {
       reader_params:{
-          launch_url: params['launch_presentation_return_url'],
-          reader_resource_link_id: params['resource_link_id']
+          launch_url: 'https://' + req.get('host') + req.originalUrl,
+          reader_resource_link_id: 'https://' + req.get('host') + req.originalUrl,
+          reader_product_code: "QAReaderCode"
       }
   };
+  console.log("################## Invoked URL #################")
+  console.log(bodyparams.reader_params.launch_url)
+  console.log("################## Invoked URL  Ends #################")
+
+
 
   bodyparams['lti_params'] = permitParams(params).only( 'oauth_consumer_key','oauth_signature_method',
   'oauth_timestamp','oauth_nonce','oauth_version','context_id','context_label','context_title','custom_canvas_enrollment_state',
